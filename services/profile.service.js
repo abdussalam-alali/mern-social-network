@@ -26,13 +26,25 @@ const getProfileByUserId = (userId) =>{
 }
 // delete the profile, user, and user's posts.
 const deleteProfileAndUser =async (userId)=> {
-    const res = await Profile.findOneAndDelete({user: userId});
-    await User.findOneAndDelete({_id: userId});
+    await Profile.findOneAndDelete({user: userId});
+    const res = await User.findOneAndDelete({_id: userId});
 
-    return true;
+    return res;
+}
+
+const addExperience = async (data,userId)=>{
+    const profile = await Profile.findOne({user: userId});
+    if(!profile)
+        return false;
+    profile.experience.unshift(data);
+    await profile.save();
+    console.log(profile);
+    return profile;
+
 }
 module.exports = {
     getUserProfile,
+    addExperience,
     storeProfile,
     deleteProfileAndUser,
     allProfiles,

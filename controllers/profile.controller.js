@@ -1,4 +1,5 @@
 const profileservice = require('../services/profile.service');
+const pick = require('../utils/pick');
 
 const getMyProfile = async (req,res) =>{
     try{
@@ -57,10 +58,25 @@ const deleteProfile = async (req,res)=>{
         if(result) {
             return res.json({msg: "Profile deleted successfully!"});
         }
+        return res.json({msg: "User does not exist"});
     }catch(err) {
         console.error(err.message);
         res.status(500).json({msg: "500 - Internal Server Error", error: err.message});
     }
+}
+const updateProfileExperience = async (req,res)=>{
+    const data = pick(req.body,['title','company','from','to','current','description']);
+    try{
+        const result = await profileservice.addExperience(data,req.user.id);
+        if(!result) {
+            return res.status(404).json({msg: "Profile not found"});
+        }
+        return res.json(result);
+    }catch(err){
+        console.error(err.message);
+        res.status(500).send({msg: "Internal Server Error", error: err.message});
+    }
+    res.json(data);
 }
 
 module.exports = {
@@ -68,5 +84,6 @@ module.exports = {
     deleteProfile,
     createProfile,
     getAllProfiles,
-    getProfileById
+    getProfileById,
+    updateProfileExperience
 }
