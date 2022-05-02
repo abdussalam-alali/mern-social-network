@@ -13,7 +13,6 @@ const getMyProfile = async (req,res) =>{
     }
 }
 
-
 const createProfile = async (req,res)=>{
     try{
         const data = {...req.body, user: req.user.id};
@@ -51,8 +50,22 @@ const getProfileById = async (req,res)=>{
 
     }
 }
+
+const deleteProfile = async (req,res)=>{
+    try{
+        const result = await profileservice.deleteProfileAndUser(req.user.id);
+        if(result) {
+            return res.json({msg: "Profile deleted successfully!"});
+        }
+    }catch(err) {
+        console.error(err.message);
+        res.status(500).json({msg: "500 - Internal Server Error", error: err.message});
+    }
+}
+
 module.exports = {
     getMyProfile,
+    deleteProfile,
     createProfile,
     getAllProfiles,
     getProfileById

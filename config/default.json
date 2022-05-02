@@ -1,5 +1,0 @@
-{
-
-  "mongoURI": "mongodb+srv://<yourusername>:<yourpassword>@cluster0.vklnj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  "jwtSecret": "JWT_SECRET_TOKEN"
-}

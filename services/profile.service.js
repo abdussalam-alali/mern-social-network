@@ -1,4 +1,5 @@
 const Profile = require('../models/Profile.model');
+const User = require('../models/User.model');
 
 const getUserProfile =  (userId) => {
     return Profile.findOne({ user: userId }).populate('user',['name','avatar']);
@@ -23,9 +24,17 @@ const getProfileByUserId = (userId) =>{
     return Profile.findOne({user: userId}).populate('user',['name','avatar']);
 
 }
+// delete the profile, user, and user's posts.
+const deleteProfileAndUser =async (userId)=> {
+    const res = await Profile.findOneAndDelete({user: userId});
+    await User.findOneAndDelete({_id: userId});
+
+    return true;
+}
 module.exports = {
     getUserProfile,
     storeProfile,
+    deleteProfileAndUser,
     allProfiles,
     getProfileByUserId
 }

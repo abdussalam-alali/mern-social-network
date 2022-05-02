@@ -8,5 +8,6 @@ const validator = require('../../middlewares/valitator');
 router.get('/',profileController.getAllProfiles)
     .get('/user/:id',profileController.getProfileById)
     .get('/me',auth, profileController.getMyProfile)
-    .post('/', [auth, validator(rulesCreate) ] ,profileController.createProfile);
+    .post('/', [auth, validator(rulesCreate) ] ,profileController.createProfile)
+    .delete('/',auth, profileController.deleteProfile);
 module.exports = router;
