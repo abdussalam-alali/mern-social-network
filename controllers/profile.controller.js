@@ -115,6 +115,15 @@ const deleteEducation = async (req,res) => {
     }
 }
 
+const getUserRepositories = async (req,res)=>{
+    try{
+        const result = await profileservice.fetchRepositories(req.params.username);
+        res.json(result);
+    }catch(err) {
+        console.error(err.message);
+        res.status(500).json({error: err.message});
+    }
+}
 module.exports = {
     getMyProfile,
     deleteProfile,
@@ -124,5 +133,6 @@ module.exports = {
     getProfileById,
     updateProfileExperience,
     addEducation,
-    deleteEducation
+    deleteEducation,
+    getUserRepositories
 }

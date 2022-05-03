@@ -1,6 +1,9 @@
 const Profile = require('../models/Profile.model');
 const User = require('../models/User.model');
 const {errorMsg} = require("../utils/responses");
+const request = require('request');
+const config = require('config');
+
 
 const getUserProfile =  (userId) => {
     return Profile.findOne({ user: userId }).populate('user',['name','avatar']);
@@ -71,10 +74,32 @@ const removeEducationItem = async (itemId, userId) =>{
     profile.education.splice(indexOfItemToRemove,1);
     return (await profile.save());
 }
+const fetchRepositories =  (username)=>{
+    const options = {
+        uri: `https://api.github.com/users/${username}/repos?per_page=10&sort=created:asc&client_id=${config.get('githubClientID')}&client_secret=${config.get('githubClientSecret')}`,
+        method: 'GET',
+        headers: {
+            'user-agent': 'node.jss',
+        }
+    }
+    return new Promise((resolve,reject)=>{
+        request(options, (err,response,body)=>{
+            if(err)
+                reject(err);
+            if(response.statusCode!==200)
+                resolve(errorMsg("User not found",404));
 
+            if(response.statusCode==200)
+                resolve(JSON.parse(body));
+        });
+    });
+
+
+}
 module.exports = {
     getUserProfile,
     addExperience,
+    fetchRepositories,
     saveEducation,
     storeProfile,
     deleteProfileAndUser,

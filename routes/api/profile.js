@@ -17,4 +17,7 @@ router.put('/experience',auth, validator(rulesUpdateExperience), profileControll
 router.put('/education',auth,validator(rulesUpdateEducation),profileController.addEducation)
     .delete('/education/:id',auth,profileController.deleteEducation);
 
+// github routes
+router.get('/github/:username',profileController.getUserRepositories);
+
 module.exports = router;
