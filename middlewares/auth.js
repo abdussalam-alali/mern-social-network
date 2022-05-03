@@ -12,7 +12,6 @@ module.exports  = async (req,res,next) =>{
     try{
         const decoded = jwt.verify(token,config.get('jwtSecret'));
         req.user = decoded.user;
-        return next();
         const dbUser = await User.findOne({_id: req.user.id});
         if(dbUser)
             next();

@@ -78,10 +78,19 @@ const updateProfileExperience = async (req,res)=>{
     }
     res.json(data);
 }
+const deleteExperience = async (req,res)=>{
+    try{
+        const result = await profileservice.deleteExperienceById(req.user.id, req.query.id);
 
+    }catch(err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Internal Server Error", error: err.message});
+    }
+}
 module.exports = {
     getMyProfile,
     deleteProfile,
+    deleteExperience,
     createProfile,
     getAllProfiles,
     getProfileById,

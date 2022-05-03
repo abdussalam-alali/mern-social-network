@@ -42,6 +42,9 @@ const addExperience = async (data,userId)=>{
     return profile;
 
 }
+const deleteExperienceById = (userId, experienceId) =>{
+
+}
 module.exports = {
     getUserProfile,
     addExperience,
