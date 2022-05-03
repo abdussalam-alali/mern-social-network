@@ -1,6 +1,5 @@
 const profileservice = require('../services/profile.service');
 const pick = require('../utils/pick');
-const {errorMsg} = require("../utils/responses");
 
 const getMyProfile = async (req,res) =>{
     try{
