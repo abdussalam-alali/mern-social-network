@@ -1,5 +1,6 @@
 const profileservice = require('../services/profile.service');
 const pick = require('../utils/pick');
+const {errorMsg} = require("../utils/responses");
 
 const getMyProfile = async (req,res) =>{
     try{
@@ -80,13 +81,40 @@ const updateProfileExperience = async (req,res)=>{
 }
 const deleteExperience = async (req,res)=>{
     try{
-        const result = await profileservice.deleteExperienceById(req.user.id, req.query.id);
+        const result = await profileservice.deleteExperienceById(req.user.id, req.params.id);
+        res.json(result);
 
     }catch(err) {
         console.error(err.message);
         res.status(500).json({msg: "Internal Server Error", error: err.message});
     }
 }
+// TODO: update experience
+// TODO: update education
+
+
+const addEducation = async (req,res) => {
+     try{
+         const data = pick(req.body,['school','degree','fieldofstudy','from','to','current','description']);
+         const result = await profileservice.saveEducation(data,req.user.id);
+         res.json(result);
+     }catch (err) {
+         console.error(err.message);
+         res.status(500).json({msg:"Internal Server Error",error: err.message});
+     }
+}
+
+const deleteEducation = async (req,res) => {
+    try{
+        const itemId = req.params.id;
+        const result = await profileservice.removeEducationItem(itemId,req.user.id);
+        res.json(result);
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg:"Internal Server Error",error: err.message});
+    }
+}
+
 module.exports = {
     getMyProfile,
     deleteProfile,
@@ -94,5 +122,7 @@ module.exports = {
     createProfile,
     getAllProfiles,
     getProfileById,
-    updateProfileExperience
+    updateProfileExperience,
+    addEducation,
+    deleteEducation
 }

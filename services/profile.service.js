@@ -1,5 +1,6 @@
 const Profile = require('../models/Profile.model');
 const User = require('../models/User.model');
+const {errorMsg} = require("../utils/responses");
 
 const getUserProfile =  (userId) => {
     return Profile.findOne({ user: userId }).populate('user',['name','avatar']);
@@ -42,14 +43,43 @@ const addExperience = async (data,userId)=>{
     return profile;
 
 }
-const deleteExperienceById = (userId, experienceId) =>{
-
+const deleteExperienceById = async (userId, experienceId) =>{
+    const profile =await Profile.findOne({user: userId});
+    const removedIndex = profile.experience.map(item => item.id).indexOf(experienceId);
+    if(removedIndex===-1)
+        return errorMsg("No such experience found",404);
+    profile.experience.splice(removedIndex,1);
+    return (await profile.save());
 }
+
+const saveEducation = async (data,userId) => {
+    const profile = await Profile.findOne({user: userId});
+    if(!profile)
+        return errorMsg("Profile not found",404);
+    profile.education.unshift(data);
+    return (await profile.save());
+}
+
+const removeEducationItem = async (itemId, userId) =>{
+    const profile = await Profile.findOne({user:userId});
+    if(!profile)
+        return errorMsg("profile not found",404);
+    const indexOfItemToRemove = profile.education.map(item => item.id).indexOf(itemId);
+    if(indexOfItemToRemove===-1)
+        return errorMsg("Item not found",404);
+
+    profile.education.splice(indexOfItemToRemove,1);
+    return (await profile.save());
+}
+
 module.exports = {
     getUserProfile,
     addExperience,
+    saveEducation,
     storeProfile,
     deleteProfileAndUser,
     allProfiles,
-    getProfileByUserId
+    getProfileByUserId,
+    deleteExperienceById,
+    removeEducationItem
 }
