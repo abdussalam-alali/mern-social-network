@@ -27,9 +27,42 @@ const deletePostById = async (postId, userId) => {
     return Post.findOneAndDelete({'_id': postId});
 }
 
+
+const likePost = async (postId,userId) => {
+    const post = await Post.findOne({_id: postId});
+    if(!post)
+    {
+        return {
+            status: 404,
+            msg: "Post not found"
+        }
+    }
+
+    const ch = post.likes.map(item =>  item.user?.toString()).indexOf(userId);
+
+    if(ch!== -1)
+    {
+        post.likes.splice(ch,1);
+        await post.save();
+
+        return {
+            msg: "Unliked",
+            status: 200
+        }
+    } else {
+        post.likes.unshift({user: userId});
+        await post.save();
+        return {
+            msg: "Liked",
+            status: 200
+        }
+    }
+}
+
 module.exports = {
     savePost,
     getAllPosts,
     getPostById,
-    deletePostById
+    deletePostById,
+    likePost,
 }

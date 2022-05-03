@@ -9,6 +9,7 @@ router.get('/',auth, postController.listPosts)
     .get('/:id',auth,postController.showPost)
     .post('/',auth,validator(rules.newPost),postController.addNewPost)
     .put('/:id',()=>{})
-    .delete('/:id',auth, postController.destroyPost);
+    .delete('/:id',auth, postController.destroyPost)
+    .put('/:id/like',auth,postController.addLike);
 
 module.exports = router;

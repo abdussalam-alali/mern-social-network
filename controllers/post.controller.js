@@ -51,9 +51,33 @@ const destroyPost = async (req,res) => {
 }
 
 
+const addLike = async (req,res) =>{
+    try{
+        const result = await postService.likePost(req.params.id,req.user.id);
+        res.status(result.status).json({msg: result.msg});
+    }catch (err) {
+        console.error(err.message);
+        if(err.kind === 'ObjectId')
+            return res.status(404).json(errorMsg("Post not found",404));
+        res.status(500).json({error:err.message});
+    }
+}
+
+const removeLike = (req,res) => {
+    try{
+
+    }catch (err) {
+        console.error(err.message);
+        if(err.kind === 'ObjectId')
+            return res.status(404).json(errorMsg("Post not found",404));
+        res.status(500).json({error:err.message});
+    }
+}
 module.exports = {
     addNewPost,
     showPost,
     listPosts,
     destroyPost,
+    addLike,
+    removeLike
 }
