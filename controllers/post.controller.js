@@ -73,11 +73,41 @@ const removeLike = (req,res) => {
         res.status(500).json({error:err.message});
     }
 }
+
+const commentOnPost = async (req,res) => {
+    try{
+        const result = await postService.addComment(req.body.text, req.user.id,req.params.id);
+        if(!result)
+            return res.status(404).json(errorMsg("Post not found",404));
+        return res.json(result);
+    }catch(err) {
+        console.error(err.message);
+        if(err.kind === 'ObjectId')
+            return res.status(404).json(errorMsg("Post not found",404));
+        res.status(500).json({msg: "Internal Server Error"})
+    }
+}
+
+const removeComment = async (req,res) => {
+    try{
+        const result = await postService.deleteComment(req.params.pid,req.params.cid,req.user.id);
+        if(result?.status)
+            return res.status(result.status).json({msg:result.msg});
+        return res.json(result);
+    }catch(err) {
+        console.error(err.message);
+        if(err.kind === 'ObjectId')
+            return res.status(404).json(errorMsg("Comment not found",404));
+        res.status(500).json({msg: "Internal Server Error"})
+    }
+}
 module.exports = {
     addNewPost,
     showPost,
     listPosts,
     destroyPost,
     addLike,
-    removeLike
+    removeLike,
+    commentOnPost,
+    removeComment
 }

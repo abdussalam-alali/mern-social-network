@@ -10,6 +10,7 @@ router.get('/',auth, postController.listPosts)
     .post('/',auth,validator(rules.newPost),postController.addNewPost)
     .put('/:id',()=>{})
     .delete('/:id',auth, postController.destroyPost)
-    .put('/:id/like',auth,postController.addLike);
-
+    .put('/:id/like',auth,postController.addLike)
+    .post('/:id/comment',auth,validator(rules.newComment),postController.commentOnPost)
+    .delete('/:pid/comment/:cid',auth,postController.removeComment);
 module.exports = router;

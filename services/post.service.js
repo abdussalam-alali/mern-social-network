@@ -1,6 +1,7 @@
 const Post = require('../models/Post.model');
 const User = require('../models/User.model');
 const { errorMsg } = require("../utils/responses");
+const ObjectId = require('mongodb').ObjectId;
 
 const savePost = async (data,userId)=>{
     const user = await User.findOne({user: userId}).select('-password');
@@ -59,10 +60,34 @@ const likePost = async (postId,userId) => {
     }
 }
 
+const addComment = async (text,  userId, postId)=>{
+    const post = await Post.findById(postId);
+    if(!post)
+        return null;
+    const comment = {
+        text,
+        user: userId
+    }
+
+    post.comments.unshift(comment);
+
+    return (await post.save());
+}
+
+const deleteComment = async(postId, commentId, userId)=>{
+    console.log(postId,commentId,userId);
+    const post = await Post.findOne({_id: postId, "comments.user": userId,"comments._id": commentId});
+    if(post===null)
+        return { status: 404, msg: "Nothing deleted"};
+
+    return (await Post.updateOne({_id: postId},{$pull: {comments: { _id: commentId, user: userId}}}));
+}
 module.exports = {
     savePost,
     getAllPosts,
     getPostById,
     deletePostById,
     likePost,
+    addComment,
+    deleteComment
 }
