@@ -1,6 +1,10 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
-function Login() {
+import {Link, Navigate} from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import {login} from "../../actions/auth.actions";
+
+function Login({login, isAuth}) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -10,7 +14,12 @@ function Login() {
     const updateState = e => setFormData({...formData, [e.target.name]: e.target.value});
 
     const handleSubmit = async e => {
+        e.preventDefault();
+        login(email,password);
+    }
 
+    if(isAuth){
+        return <Navigate to='/dashboard' />
     }
     return (
         <>
@@ -38,5 +47,11 @@ function Login() {
         </>
     );
 }
-
-export default Login;
+Login.propType = {
+    login: PropTypes.func.isRequired,
+    isAuth: PropTypes.bool
+}
+const mapStateToProps = state => ({
+    isAuth: state.auth.isAuthenticated
+})
+export default connect(mapStateToProps,{login})(Login);

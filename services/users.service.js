@@ -11,7 +11,9 @@ const handleUserRegister = async (data) =>{
         // check if user exist
         let user = await User.findOne({email: data.email})
         if(user){
-            return errorMsg('Email already exist!',400);
+            return {
+                success: false,
+            }
         }
         // get user gravatar
         const avatar = gravatar.url(data.email,{

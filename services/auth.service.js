@@ -10,12 +10,12 @@ const verifyTokenAndGetUser = (request)=>{
 const attemptLogin = async (email,password) =>{
     const usr = await user.findOne({email});
     if(!usr){
-        return errorMsg('Invalid Credentials');
+        return { success: false }
     }
     console.log(usr);
     const isMatch = await bcrypt.compare(password, usr.password);
     if(!isMatch) {
-        return errorMsg('Invalid Credentials');
+        return { success: false }
     }
     const payload = {
         user: {

@@ -1,4 +1,5 @@
 const authService = require('../services/auth.service');
+const {errorMsg} = require("../utils/responses");
 
 const getUser = async (req,res) =>{
     try{
@@ -15,6 +16,9 @@ const authenticate = async (req,res) =>{
     try{
         const { email, password } = req.body;
         const result = await authService.attemptLogin(email,password);
+        if(!result.success) {
+            return res.status(402).send(errorMsg("Invalid Credentials"));
+        }
         return res.status(200).json(result);
     }catch (err){
         console.error(err.message);
