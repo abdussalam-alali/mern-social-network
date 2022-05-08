@@ -1,7 +1,7 @@
 import './App.css';
 import {Fragment, useEffect} from "react";
 import Navbar from './components/layout/Navbar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
 import  AppRoutes  from './routes/index';
 import Landing from "./components/layout/Landing";
 import Alerts from "./components/layout/Alert";
@@ -18,17 +18,20 @@ const App = ()=> {
     useEffect(()=>{
         store.dispatch(loadUser());
     },[]);
+    console.log(AppRoutes);
     return (
         <Provider store={store}>
             <Router>
                 <Fragment>
                     <Navbar />
                     <Routes>
-                        <Route exact path='/' element={(<Landing />)} />
+                        <Route path='/' element={(<Landing />)} />
                     </Routes>
                     <section className='container'>
                         <Alerts />
-                        <AppRoutes />
+                        <Routes>
+                            { AppRoutes.map(route=>(<Route {...route } />))}
+                        </Routes>
                     </section>
                 </Fragment>
             </Router>
